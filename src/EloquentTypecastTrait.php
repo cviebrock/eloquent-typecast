@@ -13,45 +13,77 @@ trait EloquentTypecastTrait {
 
 
 	/**
-	 * Get a plain attribute (not a relationship).
+	 * Augment the "booting" method of the model to add all our typecast-able
+	 * attributes to the mutator cache.  This way, they get mutated without
+	 * us needing to write a mutator function for each one.
 	 *
-	 * @param  string  $key
-	 * @return mixed
-	 * @see Illuminate\Database\Eloquent\Model::getAttributeValue()
+	 * @return void
+	 * @see  Illuminate\Database\Eloquent\Model::boot()
 	 */
-	protected function getAttributeValue($key)
+	protected static function boot()
 	{
-		$value = parent::getAttributeValue($key);
+		parent::boot();
 
-		if (array_key_exists($key, $this->getCastAttributes()))
+		$class = get_called_class();
+		$instance = new $class();
+
+		foreach($instance->getCastAttributes() as $attribute=>$type)
 		{
-			if ($value) return $this->castAttribute($key, $value);
+			static::$mutatorCache[$class][] = $attribute;
 		}
-
-		return $value;
 	}
 
+
 	/**
-	 * Return the array of attributes to case
+	 * Get the value of an attribute using its mutator.  If the attribute
+	 * is typecast-able, then return the cast value instead.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return mixed
+	 * @see  Illuminate\Database\Eloquent\Model::mutateAttribute()
+	 */
+	protected function mutateAttribute($key, $value)
+	{
+		if (array_key_exists($key, $this->getCastAttributes()))
+		{
+			return $this->castAttribute($key, $value);
+		}
+
+		return parent::mutateAttribute($key, $value);
+	}
+
+
+	/**
+	 * Return the array of attributes to cast.
+	 *
 	 * @return array
 	 */
-	protected getCastAttributes()
+	protected function getCastAttributes()
 	{
 		return $this->cast;
 	}
 
+
 	/**
+	 * Cast an attribute to a PHP variable type.
+	 *
 	 * @param  string  $key
 	 * @param  mixed   $value
 	 * @return  mixed
 	 */
-	protected castAttribute($key, $value)
+	protected function castAttribute($key, $value)
 	{
 		$type = $this->cast[$key];
-		if ( settype($value, $type) ) {
-			return $value;
+
+		try {
+			if ( settype($value, $type) ) {
+				return $value;
+			}
+			throw new EloquentTypecastException("Value could not be cast to type \"$type\"", 1);
+		} catch (\Exception $e) {
+			throw new EloquentTypecastException("Value could not be cast to type \"$type\"", 1);
 		}
-		throw new EloquentTypecastException("Value could not be cast to type \"$type\"", 1);
 	}
 
 }
