@@ -7,9 +7,10 @@ trait EloquentTypecastTrait {
 	 * Attributes to type cast.  Array key is the attribute name, value is the
 	 * PHP variable type to cast to.
 	 *
-	 * @var array
+	 * NOTE: you need to define this in your models.
+	 *
+	 * @var array $cast
 	 */
-	protected $cast = array();
 
 
 	/**
@@ -61,15 +62,16 @@ trait EloquentTypecastTrait {
 	 */
 	protected function getCastAttributes()
 	{
-		return $this->cast;
+		return isset($this->cast) ? $this->cast : array();
 	}
 
 
 	/**
 	 * Cast an attribute to a PHP variable type.
 	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
+	 * @param  string $key
+	 * @param  mixed $value
+	 * @throws EloquentTypecastException
 	 * @return  mixed
 	 */
 	protected function castAttribute($key, $value)
