@@ -24,6 +24,8 @@ For some database drivers, all the attributes you get back from a query are retu
 
 Rather than have to use these "integer-looking" strings, etc., and rely on PHP's type-juggling, this trait will cast those attribute values to the proper native PHP variable type automagically for you.
 
+This is also going to be very handy if you are, say, building an API and would like to just return JSON-versions of Eloquent models.  Using this trait, all the JSON elements are going to be the right type for consumers of your API -- instead of all strings -- saving them type-juggling on their end.
+
 > Note: I believe if you are using the mysqlnd drivers in your PHP installation, then you don't need this trait as mysqlnd handles this type casting for you.  Try it out by doing a `var_dump($model->getKey())`.  If it shows that the value is an integer, you don't need this package.  If it shows it's a string, read on.
 
 
