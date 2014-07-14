@@ -1,7 +1,7 @@
 {
 	"name": "cviebrock/eloquent-typecast",
 	"description": "Trait for Eloquent models to force type-casting on retrieved values",
-	"keywords": ["laravel", "eloquent", "typecast", "boolean", "integer", "float", "settype", "mutator"],
+	"keywords": ["laravel", "eloquent", "typecast", "json", "boolean", "integer", "float", "settype", "mutator"],
 	"homepage": "https://github.com/cviebrock/eloquent-typecast",
 	"license": "MIT",
 	"authors": [
