@@ -71,6 +71,29 @@ Anytime you request an attribute listed in the `$cast` array, it will be convert
 
 The keys of the `$cast` array are the attribute (i.e. column) names, and the values are the types you want to cast to.  Anything supported by PHP's [settype()](http://php.net/manual/en/function.settype.php) function is valid ... although casting to arrays, objects, or null could be problematic.
 
+If you set the `$castOnSet` property on your model to `true`, then setting an attribute that's in the `$cast` array will typecast that value before setting it.  For example:
+
+```php
+class MyModel {
+
+    use EloquentTypecastTrait;
+
+    protected $castOnSet = true;
+
+    protected $cast = array(
+        'price'      => 'float',
+    );
+
+}
+
+$myModel = MyModel::find(1);
+
+$price = Input::get('price');  // this will be a string
+$myModel->price = $price;      // the string is cast to a float before setting;
+```
+
+In general, this setting isn't really necessary as Laravel and most databases will handle the string-to-column-type conversion for you on save.  However, maybe there are cases where it's useful, so it's added for "feature completion".
+
 
 
 <a name="notes"></a>

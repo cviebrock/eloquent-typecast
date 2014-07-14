@@ -46,12 +46,31 @@ trait EloquentTypecastTrait {
 	 */
 	protected function mutateAttribute($key, $value)
 	{
-		if (array_key_exists($key, $this->getCastAttributes()))
+		if ($this->isCastableAttribute($key))
 		{
 			return $this->castAttribute($key, $value);
 		}
 
 		return parent::mutateAttribute($key, $value);
+	}
+
+
+	/**
+	 * Set a given attribute on the model.  If the attribute is typecast-able,
+	 * then cast the value before setting it.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 * @see  Illuminate\Database\Eloquent\Model::setAttribute()
+	 */
+	public function setAttribute($key, $value)
+	{
+		if ($this->castOnSet() && $this->isCastableAttribute($key))
+		{
+			$value = $this->castAttribute($key, $value);
+		}
+		return parent::setAttribute($key, $value);
 	}
 
 
@@ -63,6 +82,28 @@ trait EloquentTypecastTrait {
 	protected function getCastAttributes()
 	{
 		return isset($this->cast) ? $this->cast : array();
+	}
+
+
+	/**
+	 * Return the array of attributes to cast.
+	 *
+	 * @return array
+	 */
+	protected function castOnSet()
+	{
+		return isset($this->castOnSet) ? $this->castOnSet : false;
+	}
+
+
+	/**
+	 * Is the given attribute typecast-able.
+	 *
+	 * @return bool
+	 */
+	protected function isCastableAttribute($key)
+	{
+		return array_key_exists($key, $this->getCastAttributes());
 	}
 
 
