@@ -14,16 +14,14 @@ trait EloquentTypecastTrait {
 
 
 	/**
-	 * Augment the "booting" method of the model to add all our typecast-able
+	 * Boot the typecasting trait for a model, which will add all our typecast-able
 	 * attributes to the mutator cache.  This way, they get mutated without
 	 * us needing to write a mutator function for each one.
 	 *
 	 * @return void
-	 * @see  Illuminate\Database\Eloquent\Model::boot()
 	 */
-	protected static function boot()
+	protected static function bootEloquentTypecastTrait()
 	{
-		parent::boot();
 
 		$class = get_called_class();
 		$instance = new $class();
