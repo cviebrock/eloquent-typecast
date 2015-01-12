@@ -70,7 +70,25 @@ trait EloquentTypecastTrait {
 		}
 		return parent::setAttribute($key, $value);
 	}
+	
+	/**
+	 * Get a given attribute on the model.  If the attribute is typecast-able,
+	 * then cast the value before getting it.
+	 *
+	 * @param  string  $key
+	 * @return mixed
+	 */
+	protected function getAttributeValue($key)
+	{
+		$value = parent::getAttributeValue($key);
 
+		if ($this->isCastableAttribute($key))
+		{
+			$value = $this->castAttribute($key, $value);
+		}
+
+		return $value;
+	}
 
 	/**
 	 * Return the array of attributes to cast.
