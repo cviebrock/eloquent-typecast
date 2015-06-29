@@ -64,7 +64,7 @@ trait EloquentTypecastTrait {
 	 */
 	public function setAttribute($key, $value)
 	{
-		if ($this->castOnSet() && $this->isCastableAttribute($key))
+		if ($this->castOverride() && $this->isCastableAttribute($key))
 		{
 			$value = $this->castAttribute($key, $value);
 		}
@@ -106,9 +106,9 @@ trait EloquentTypecastTrait {
 	 *
 	 * @return array
 	 */
-	protected function castOnSet()
+	protected function castOverride()
 	{
-		return isset($this->castOnSet) ? $this->castOnSet : false;
+		return isset($this->castOverride) ? $this->castOverride : false;
 	}
 
 
