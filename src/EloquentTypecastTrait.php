@@ -139,9 +139,9 @@ trait EloquentTypecastTrait {
 			if ( settype($value, $type) ) {
 				return $value;
 			}
-			throw new EloquentTypecastException("Value could not be cast to type \"$type\"", 1);
+			throw new EloquentTypecastException("Value could not be cast to type '{$type}' ", 1);
 		} catch (\Exception $e) {
-			throw new EloquentTypecastException("Value could not be cast to type \"$type\"", 1);
+			throw new EloquentTypecastException("Value could not be cast to type '{$type}' ", 1);
 		}
 	}
 
