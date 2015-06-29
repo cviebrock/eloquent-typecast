@@ -136,7 +136,7 @@ trait EloquentTypecastTrait {
 	       if( empty($key) || ! isset($this->casts[$key]) ) return $value;
 	       
 		$type = $this->casts[$key];
-
+		
 		try {
 			if ( settype($value, $type) ) {
 				return $value;
@@ -145,7 +145,6 @@ trait EloquentTypecastTrait {
 		} catch (\Exception $e) {
 			throw new EloquentTypecastException("Value could not be cast to type \"$type\"", 1);
 		}
-	       
 	}
 
 }
