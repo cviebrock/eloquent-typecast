@@ -78,7 +78,7 @@ trait EloquentTypecastTrait {
 	 * @param  string  $key
 	 * @return mixed
 	 */
-	protected function getAttributeValue($key)
+	public function getAttributeValue($key)
 	{
 		$value = parent::getAttributeValue($key);
 
