@@ -136,6 +136,10 @@ trait EloquentTypecastTrait {
 		$type = $this->cast[$key];
 
 		try {
+			if ( is_null($value) ) {
+				return null;
+			}
+			
 			if ( settype($value, $type) ) {
 				return $value;
 			}
