@@ -64,13 +64,13 @@ trait EloquentTypecastTrait {
 	 */
 	public function setAttribute($key, $value)
 	{
-		if ($this->castOnSet() && $this->isCastableAttribute($key))
+		if ($this->castOverride() && $this->isCastableAttribute($key))
 		{
 			$value = $this->castAttribute($key, $value);
 		}
 		return parent::setAttribute($key, $value);
 	}
-	
+
 	/**
 	 * Get a given attribute on the model.  If the attribute is typecast-able,
 	 * then cast the value before getting it.
@@ -78,7 +78,7 @@ trait EloquentTypecastTrait {
 	 * @param  string  $key
 	 * @return mixed
 	 */
-	protected function getAttributeValue($key)
+	public function getAttributeValue($key)
 	{
 		$value = parent::getAttributeValue($key);
 
@@ -97,7 +97,7 @@ trait EloquentTypecastTrait {
 	 */
 	protected function getCastAttributes()
 	{
-		return isset($this->cast) ? $this->cast : array();
+		return isset($this->casts) ? $this->casts : array();
 	}
 
 
@@ -106,9 +106,9 @@ trait EloquentTypecastTrait {
 	 *
 	 * @return array
 	 */
-	protected function castOnSet()
+	protected function castOverride()
 	{
-		return isset($this->castOnSet) ? $this->castOnSet : false;
+		return isset($this->castOverride) ? $this->castOverride : false;
 	}
 
 
@@ -133,8 +133,10 @@ trait EloquentTypecastTrait {
 	 */
 	protected function castAttribute($key, $value)
 	{
-		$type = $this->cast[$key];
-
+	       if( empty($key) || ! isset($this->casts[$key]) ) return $value;
+	       
+		$type = $this->casts[$key];
+		
 		try {
 			if ( is_null($value) ) {
 				return null;
