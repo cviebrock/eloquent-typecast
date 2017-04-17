@@ -80,7 +80,7 @@ class MyModel {
 
     use EloquentTypecastTrait;
 
-    protected $castOnSet = true;
+    protected $castOverride = true;
 
     protected $cast = array(
         'price'      => 'float',
